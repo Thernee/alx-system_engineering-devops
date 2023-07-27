@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# lists only names of the files in the current directory
+
+for file in *
+do
+    basename "$file" | rev | cut -d '-' -f1 | rev
+done
