@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+#This script is displaying "Best school" 10 times
+
+n=1
+
+while [ $n -le 10 ]
+do
+
+   if [[ $n -ne 4  && $n -ne 8 ]]
+   then
+      echo "Best School"
+   fi
+
+   if [ $n -eq 8 ]
+   then
+      echo "good luck"
+   fi
+
+   if [ $n -eq 4 ]
+   then
+      echo "bad luck"
+   fi
+
+   ((n++))
+
+done
