@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Displays numbers from 1 to 20
 
 n=1
 
