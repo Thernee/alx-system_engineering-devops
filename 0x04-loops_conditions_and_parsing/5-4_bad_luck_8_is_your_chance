@@ -9,15 +9,13 @@ do
    if [[ $n -ne 4  && $n -ne 8 ]]
    then
       echo "Best School"
-   fi
 
-   if [ $n -eq 8 ]
+   elif [ $n -eq 8 ]
    then
       echo "good luck"
-   fi
 
-   if [ $n -eq 4 ]
-   then
+   else [ $n -eq 4 ]
+
       echo "bad luck"
    fi
 
