@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Displays "To infinity and beyond" indfinitely
+
+
+pid=$(pgrep -f "7-highlander")
+kill -9 "$pid"
