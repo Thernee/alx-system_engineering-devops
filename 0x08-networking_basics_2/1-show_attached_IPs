@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Displays all active IPv4 IPs on the machine it’s executed on.
+
+hostname -I | awk '{print $1}' ; hostname -i
