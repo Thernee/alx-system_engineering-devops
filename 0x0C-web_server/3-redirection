@@ -9,7 +9,7 @@ cat <<EOL | sudo tee /etc/nginx/sites-available/default > /dev/null
 server {
     listen 80;
     listen [::]:80 default_server;
-    root   /etc/nginx/html;
+    root   /var/www/html;
     index  index.html index.htm;
 
     location /redirect_me {
