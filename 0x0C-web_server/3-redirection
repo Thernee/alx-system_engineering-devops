@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# A script that configures Nginx server to redirect to another page
+
+sudo apt-get -y update
+sudo apt-get -y install nginx
+echo "Hello World!" | sudo tee /var/www/html/index.html > /dev/null
+
+cat <<EOL | sudo tee /etc/nginx/sites-available/default > /dev/null
+server {
+    listen 80;
+    listen [::]:80 default_server;
+    root   /etc/nginx/html;
+    index  index.html index.htm;
+
+    location /redirect_me {
+        return 301 http://cuberule.com/;
+    }
+}
+EOL
+
+sudo service nginx restart
+
