@@ -11,8 +11,10 @@ package { 'nginx':
 
 # Step 3: Modify Nginx configuration to add a custom HTTP header
 file_line { 'http_header':
-  path   => '/etc/nginx/nginx.conf',
-  line   => "add_header X-Served-By \"${hostname}\";",
+  ensure => 'present',
+  path   => '/etc/nginx/sites-available/default',
+  after  => 'listen 80 default_server;',
+  line   => 'add_header X-Served-By $hostname;',
   notify => Exec['restart_nginx'], # Notify the nginx service to restart when the file changes
 }
 
