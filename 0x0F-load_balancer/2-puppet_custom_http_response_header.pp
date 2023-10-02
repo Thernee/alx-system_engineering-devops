@@ -2,29 +2,36 @@
 
 exec { 'update':
   command => '/usr/bin/apt-get update',
-  before  => Package['nginx'], # Ensure update happens before installing nginx
+  before  => Package['nginx'],
 }
 
 package { 'nginx':
-  ensure => 'installed',
+  ensure  => installed,
 }
 
-# Step 3: Modify Nginx configuration to add a custom HTTP header
-file_line { 'http_header':
-  ensure => 'present',
-  path   => '/etc/nginx/sites-available/default',
-  after  => 'listen 80 default_server;',
-  line   => 'add_header X-Served-By $hostname;',
-  notify => Exec['restart_nginx'], # Notify the nginx service to restart when the file changes
+file { '/var/www/html/index.html':
+  ensure  => 'present',
+  path    => '/var/www/html/index.html',
+  content => 'Hello World!',
+  require => Package['nginx'],
+}
+
+file_line { 'redirect_me':
+  ensure  => 'present',
+  path    => '/etc/nginx/sites-available/default',
+  after   => 'listen 80 default_server;',
+  line    => 'rewrite ^/redirect_me https://www.twitter.com permanent;',
+}
+
+file_line { 'add_header':
+  ensure  => 'present',
+  path    => '/etc/nginx/sites-available/default',
+  after   => 'listen 80 default_server;',
+  line    => 'add_header X-Served-By $hostname;',
+  require => Package['nginx'],
 }
 
 service { 'nginx':
-  ensure    => 'running',
-  enable    => true,
-  subscribe => File_line['http_header'], # Restart when the configuration file changes
-}
-
-exec { 'restart_nginx':
-  command     => '/usr/sbin/service nginx restart',
-  refreshonly => true, # Only run when explicitly notified
+  ensure  => running,
+  require => Package['nginx'],
 }
