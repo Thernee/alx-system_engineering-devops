@@ -1,37 +1,28 @@
 # Config for installing and setting up nginx server using puppet
 
-exec {'update':
+exec { 'update':
   command => '/usr/bin/apt-get update',
+  before  => Package['nginx'], # Ensure update happens before installing nginx
 }
 
 package { 'nginx':
   ensure => 'installed',
 }
 
-# Configure Nginx by modifying the default site configuration
-file { '/etc/nginx/sites-enabled/default':
-  ensure  => 'file',
-  content => "server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-    add_header X-Served-By \"${hostname}\";
-    root /var/www/html;
-
-    index index.html index.htm index.nginx-debian.html;
-
-    server_name _;
-
-    location /redirect_me {
-        return 301 https://twitter.com/;
-    }
-
-}\n",
-  require => Package['nginx'], # Ensure Nginx package is installed before applying this configuration
+# Step 3: Modify Nginx configuration to add a custom HTTP header
+file_line { 'http_header':
+  path   => '/etc/nginx/nginx.conf',
+  line   => "add_header X-Served-By \"${hostname}\";",
+  notify => Exec['restart_nginx'], # Notify the nginx service to restart when the file changes
 }
 
-# Ensure Nginx service is running and reload the configuration when changed
 service { 'nginx':
-  ensure     => 'running',
-  enable     => true,
-  subscribe  => File['/etc/nginx/sites-enabled/default'],
+  ensure    => 'running',
+  enable    => true,
+  subscribe => File_line['http_header'], # Restart when the configuration file changes
+}
+
+exec { 'restart_nginx':
+  command     => '/usr/sbin/service nginx restart',
+  refreshonly => true, # Only run when explicitly notified
 }
