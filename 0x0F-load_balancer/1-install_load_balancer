@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# A script that configures HAproxy to balance load between 2 servers
+
+sudo apt-get -y update
+sudo apt-get -y install haproxy
+
+# start haproxy by init script enabled
+echo "ENABLED=1" | sudo tee -a /etc/default/haproxy
+
+sudo cat <<EOL | sudo tee -a /etc/haproxy/haproxy.cfg
+frontend Abus_frontend
+        bind *:80
+        mode http
+        default_backend Abus_backend
+
+backend Abus_backend
+        balance roundrobin
+        mode http
+        server 345127-web-01 54.146.85.222 check
+	server 345127-web-02 52.91.183.35  check
+EOL
+
+#restart haproxy
+sudo service haproxy restart
