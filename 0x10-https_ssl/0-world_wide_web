@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Display subdomain information
+
+#!/usr/bin/env bash
+# Display subdomain information
+
+dig_domain() {
+    domain_info=$(dig "$2"."$1" | grep -A1 'ANSWER SECTION:' | awk 'NR>1 {gsub("\t", "\n"); printf "%s %s", "'"$2"'"  $0}')
+    echo "$domain_info" | awk '{print "The subdomain " $1 " is a " $2 " record and points to " $3}'
+}
+
+if [ "$#" -eq 2 ]; then
+    dig_domain "$1" "$2"
+elif [ "$#" -eq 1 ]; then
+    subdomains=("www" "lb-01" "web-01" "web-02")
+    for sub in "${subdomains[@]}"; do
+        dig_domain "$1" "$sub"
+    done
+else
+    echo "Usage: $0 <domain> [subdomain]"
+fi
