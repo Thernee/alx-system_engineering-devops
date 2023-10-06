@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Display subdomain information
 
-#!/usr/bin/env bash
-# Display subdomain information
+# shellcheck disable=SC2086
 
 dig_domain() {
     domain_info=$(dig "$2"."$1" | grep -A1 'ANSWER SECTION:' | awk 'NR>1 {gsub("\t", "\n"); printf "%s %s", "'"$2"'"  $0}')
