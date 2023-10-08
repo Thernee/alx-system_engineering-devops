@@ -1,0 +1,35 @@
+global
+    log     /dev/log local0
+    maxconn 2048
+    user    haproxy
+    group   haproxy
+    tune.ssl.default-dh-param 2048
+
+defaults
+    log     global
+    mode    http
+    option  httplog
+    option  dontlognull
+    retries 3
+    option  redispatch
+    timeout connect  5000
+    timeout client  10000
+    timeout server  10000
+    option  forwardfor
+    option  http-server-close=
+
+frontend abu-frontend-http
+   bind   0.0.0.0:80
+   reqadd X-Forwarded-Proto:\ http
+   default_backend abu-backend
+
+frontend abu-frontend
+   bind   0.0.0.0:443 ssl crt /etc/haproxy/certs/www.thernee.tech.pem
+   reqadd X-Forwarded-Proto:\ https
+   acl    letsencrypt-acl path_beg /.well-known/acme-challenge/
+   default_backend abu-backend
+
+backend abu-backend
+   balance  roundrobin
+   server 345127-web-01 54.146.85.222 check
+   server 345127-web-02ww 52.91.183.35 check
