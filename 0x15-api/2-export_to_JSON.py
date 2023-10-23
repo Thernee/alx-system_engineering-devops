@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 """Return info about employee's TODO list progress"""
 
+import json
 import requests
 from sys import argv
-import json
 
 if __name__ == "__main__":
     baseUrl = 'https://jsonplaceholder.typicode.com/users'
