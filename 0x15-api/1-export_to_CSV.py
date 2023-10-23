@@ -9,7 +9,7 @@ if __name__ == "__main__":
     fullUrl = f"{baseUrl}/{argv[1]}"
 
     user = requests.get(fullUrl).json()
-    name = user.get('name')
+    name = user.get('username')
 
     user_id = argv[1]
     todosUrl = f"{fullUrl}/todos"
@@ -17,5 +17,5 @@ if __name__ == "__main__":
 
     with open(f"{user_id}.csv", 'w') as csv_file:
         for todo in todos:
-            csv_file.write(f'"{user_id}", "{name}", "{todo.get("completed")}",'
-                           f' "{todo.get("title")}"\n')
+            csv_file.write(f'"{user_id}","{name}","{todo.get("completed")}",'
+                           f'"{todo.get("title")}"\n')
