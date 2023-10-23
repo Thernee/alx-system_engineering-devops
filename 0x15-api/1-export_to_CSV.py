@@ -11,11 +11,11 @@ if __name__ == "__main__":
     user = requests.get(fullUrl).json()
     name = user.get('name')
 
+    user_id = argv[1]
     todosUrl = f"{fullUrl}/todos"
     todos = requests.get(todosUrl).json()
 
-    prompt = f"Employee {name} is done with"
-    completed = [todo.get('title')
-                 for todo in todos if todo.get('completed') is True]
-    print(f"{prompt} tasks({len(completed)}/{len(todos)}):")
-    [print(f"\t {task}") for task in completed]
+    with open(f"{user_id}.csv", 'w') as csv_file:
+        for todo in todos:
+            csv_file.write(f'"{user_id}", "{name}", "{todo.get("completed")}",'
+                           f' "{todo.get("title")}"\n')
