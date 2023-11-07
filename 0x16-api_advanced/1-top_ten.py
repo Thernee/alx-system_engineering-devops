@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Module for top_ten()."""
+import json
 import requests
 
 
@@ -11,7 +12,7 @@ def top_ten(subreddit):
                             allow_redirects=False)
     if response.status_code == 404:
         print(None)
-    data = response.json().get('data', {}).get('children', [])
+    data = json.loads(response.text).get('data', {}).get('children', [])
     for post in data:
         title = post.get('data', {}).get('title')
         print(title)
