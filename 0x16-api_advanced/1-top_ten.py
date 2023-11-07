@@ -10,9 +10,10 @@ def top_ten(subreddit):
 
     response = requests.get(url, headers={'User-agent': 'MyLinuxApp/1.0'},
                             allow_redirects=False)
-    if response.status_code == 404:
+    if response.status_code >= 300:
         print(None)
-    data = json.loads(response.text).get('data', {}).get('children', [])
+        return
+    data = json.loads(response.text).get('data').get('children')
     for post in data:
-        title = post.get('data', {}).get('title')
+        title = post.get('data').get('title')
         print(title)
